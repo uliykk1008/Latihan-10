@@ -452,7 +452,225 @@ void main() {
   <button onclick="openModal('https://dartpad.dev/?id=a1856a81c3d5731a5704cfcf64962a66&run=true')">Run Program</button>
 </section>
 
-    
+<section>
+  <h2>Latihan 3 –ShapeFactory – Cache Shape yang Sama</h2>
+
+  <p>
+    Pada program ini aku membuat ShapeFactory
+    menggunakan sistem cache object.
+  </p>
+
+  <p>
+    Jadi kalau shape yang sama sudah pernah dibuat,
+    program akan mengambil data dari cache
+    dan tidak membuat object baru lagi.
+  </p>
+
+  <p>
+    Cara ini membuat penggunaan memory
+    menjadi lebih efisien.
+  </p>
+
+  <p>
+    Selain itu program juga menjadi lebih cepat
+    karena object yang sama bisa digunakan kembali.
+  </p>
+
+  <div class="code-container">
+    <div class="code-header">DART SOURCE CODE</div>
+<pre><code>// Nama  : Uliya Gumpari
+// NIM   : 251410008
+// Kelas : SI2A
+
+class ShapeFactory {
+  final String jenisShape;
+
+  // cache shape
+  static final Map<String, ShapeFactory> _shapeCache = {};
+
+  // private constructor
+  ShapeFactory._internal(this.jenisShape);
+
+  // factory constructor
+  factory ShapeFactory(String jenisShape) {
+
+    if (_shapeCache.containsKey(jenisShape)) {
+      print('Shape diambil dari cache');
+      return _shapeCache[jenisShape]!;
+    }
+
+    print('Membuat shape baru');
+
+    final shapeBaru = ShapeFactory._internal(jenisShape);
+
+    _shapeCache[jenisShape] = shapeBaru;
+
+    return shapeBaru;
+  }
+
+  void drawShape() {
+    print('Menggambar shape $jenisShape');
+  }
+}
+
+void main() {
+
+  var lingkaran1 = ShapeFactory('Circle');
+  var lingkaran2 = ShapeFactory('Circle');
+
+  lingkaran1.drawShape();
+
+  print('Apakah kedua shape sama?');
+  print(identical(lingkaran1, lingkaran2));
+}
+
+</code></pre>
+  </div>
+
+  <button onclick="openModal('https://dartpad.dev/?id=ec5389d4f9e7f58c72aaa99ec1097642&run=true')">Run Program</button>
+   </section>
+
+   <section>
+  <h2>Challenge – AnimalFactory</h2>
+
+  <p>
+    Pada challenge ini aku membuat AnimalFactory
+    untuk membuat beberapa jenis hewan
+    berdasarkan input yang diberikan user.
+  </p>
+
+  <p>
+    Program bisa membuat object cat, dog,
+    dan bird menggunakan factory constructor.
+  </p>
+
+  <p>
+    Aku juga menambahkan validasi sederhana
+    supaya nama hewan tidak kosong
+    dan umur hewan tidak negatif.
+  </p>
+
+  <p>
+    Selain itu program memakai cache object,
+    jadi kalau data hewan yang dibuat sama,
+    program akan menggunakan object sebelumnya.
+  </p>
+
+  <p>
+    Menurutku penggunaan factory constructor
+    membuat kode lebih rapi dan lebih mudah diatur.
+  </p>
+
+  <div class="code-container">
+    <div class="code-header">DART SOURCE CODE</div>
+<pre><code>// Nama  : Uliya Gumpari
+// NIM   : 251410008
+// Kelas : SI2A
+
+abstract class AnimalFactory {
+  String nama;
+  int umur;
+
+  AnimalFactory(this.nama, this.umur);
+
+  void suara();
+
+  // cache object animal
+  static final Map<String, AnimalFactory> _animalCache = {};
+
+  // factory constructor
+  factory AnimalFactory(String type, String nama, int umur) {
+
+    // validasi input
+    if (nama.isEmpty) {
+      throw ArgumentError('Nama hewan tidak boleh kosong');
+    }
+
+    if (umur < 0) {
+      throw ArgumentError('Umur hewan tidak valid');
+    }
+
+    String key = '$type-$nama-$umur';
+
+    // cek cache
+    if (_animalCache.containsKey(key)) {
+      print('Data hewan diambil dari cache');
+      return _animalCache[key]!;
+    }
+
+    late AnimalFactory hewan;
+
+    // subclass selection
+    switch (type.toLowerCase()) {
+
+      case 'cat':
+        hewan = Cat(nama, umur);
+        break;
+
+      case 'dog':
+        hewan = Dog(nama, umur);
+        break;
+
+      case 'bird':
+        hewan = Bird(nama, umur);
+        break;
+
+      default:
+        throw ArgumentError('Jenis hewan tidak tersedia');
+    }
+
+    _animalCache[key] = hewan;
+
+    return hewan;
+  }
+}
+
+class Cat extends AnimalFactory {
+
+  Cat(String nama, int umur) : super(nama, umur);
+
+  @override
+  void suara() {
+    print('$nama sedang mengeong');
+  }
+}
+
+class Dog extends AnimalFactory {
+
+  Dog(String nama, int umur) : super(nama, umur);
+
+  @override
+  void suara() {
+    print('$nama sedang menggonggong');
+  }
+}
+
+class Bird extends AnimalFactory {
+
+  Bird(String nama, int umur) : super(nama, umur);
+
+  @override
+  void suara() {
+    print('$nama sedang berkicau');
+  }
+}
+
+void main() {
+
+  var hewan1 = AnimalFactory('cat', 'Oyen', 2);
+  var hewan2 = AnimalFactory('cat', 'Oyen', 2);
+
+  hewan1.suara();
+
+  print('Apakah object hewan sama?');
+  print(identical(hewan1, hewan2));
+}
+</code></pre>
+  </div>
+
+  <button onclick="openModal('https://dartpad.dev/?id=9854e549778019f9d850c77f6cb94173&run=true')">Run Program</button>
+   </section>
+
     
   </div>
 
